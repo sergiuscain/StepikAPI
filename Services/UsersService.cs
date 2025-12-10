@@ -1,0 +1,144 @@
+﻿using MySql.Data.MySqlClient;
+using System.Data;
+
+public class UsersService
+{
+    /// <summary>
+    /// Добавление нового пользователя в таблицу users
+    /// </summary>
+    /// <param name="user">Новый пользователь</param>
+    /// <returns>Удалось ли добавить пользователя</returns>
+    public bool Add(User user)
+    {
+        try
+        {
+            //Создаем подключение
+            using MySqlConnection connection = new MySqlConnection(Constant.ConnectionString);
+            connection.Open();
+            Console.WriteLine("Connection open");
+            // Вставка данных
+            using var command = new MySqlCommand(@"
+            INSERT INTO users (full_name, details, join_date, avatar, is_active) 
+            VALUES (@full_name, @details, @join_date, @avatar, @is_active);", connection);
+            command.Parameters.AddWithValue("@full_name", user.FullName);
+            command.Parameters.AddWithValue("@details", user.Details);
+            command.Parameters.AddWithValue("@join_date", user.JoinDate);
+            command.Parameters.AddWithValue("@avatar", user.Avatar);
+            command.Parameters.AddWithValue("@is_active", user.IsActive);
+
+            int rowsAffected = command.ExecuteNonQuery();
+            Console.WriteLine($"Успешно добавлен пользователь...{rowsAffected}");
+
+            return rowsAffected > 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Не удалось добавить пользователя: {ex.Message}");
+            return false;
+        }
+    }
+    /// <summary>
+    /// Получение пользователя из таблицы users
+    /// </summary>
+    /// <param name="fullName">Полное имя пользователя</param>
+    /// <returns>User</returns>
+    public User Get(string fullName)
+    {
+        using var connection = new MySqlConnection(Constant.ConnectionString);
+        connection.Open();
+        using var command = new MySqlCommand($"SELECT * FROM users Where full_name = @full_name AND is_active = true", connection);
+        command.Parameters.AddWithValue("@full_name", fullName);
+        using var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            var user = new User
+            {
+                FullName = reader.GetString("full_name"),
+                Details = reader.IsDBNull("details") ? null : reader.GetString("details"),
+                JoinDate = reader.GetDateTime("join_date"),
+                Avatar = reader.IsDBNull("avatar") ? null : reader.GetString("avatar"),
+                IsActive = reader.GetBoolean("is_active"),
+                Knowledge = reader.GetInt32("knowledge"),
+                Reputation = reader.GetInt32("reputation"),
+                FollowersCount = reader.GetInt32("followers_count")
+            };
+            return user;
+        }
+        //Пользователь не найден
+        return null;
+    }
+    /// <summary>
+    /// Получение общего количества пользователей
+    /// </summary>
+    public int GetTotalCount()
+    {
+        using var connection = new MySqlConnection(Constant.ConnectionString);
+        connection.Open();
+        using var command = new MySqlCommand("SELECT COUNT(*) FROM users;", connection);
+        var result = command.ExecuteScalar();
+        return result == null ? 0 : Convert.ToInt32(result);
+    }
+    /// <summary>
+    /// Форматирование показателей пользователя
+    /// </summary>
+    /// <param name="number">Число для форматирования</param>
+    /// <returns>Отформатированное число</returns>
+    public string FormatUserMetrics(int number)
+    {
+        using var connection = new MySqlConnection(Constant.ConnectionString);
+        connection.Open();
+
+        // Создание команды для вызова функции
+        var functionName = "format_number";
+        using var command = new MySqlCommand(functionName, connection);
+        command.CommandType = CommandType.StoredProcedure;
+
+        // Указываем параметр для возвращаемого значения
+        var returnValueParam = new MySqlParameter()
+        {
+            Direction = ParameterDirection.ReturnValue
+        };
+
+        // Добавляем входной параметр
+        var numberParam = new MySqlParameter("number", number)
+        {
+            Direction = ParameterDirection.Input
+        };
+
+        // Добавляем параметры к команде
+        command.Parameters.Add(numberParam);
+        command.Parameters.Add(returnValueParam);
+
+        // Выполнение команды
+        command.ExecuteNonQuery();
+
+        // Получение значения возвращаемого параметра
+        var returnValue = returnValueParam.Value;
+
+        // Возвращаем значение
+        return returnValue?.ToString() ?? "";
+    }
+    /// <summary>
+    /// Рейтинг пользователей
+    /// </summary>
+    /// <returns>DataSet</returns>
+    public DataSet GetUserRating()
+    {
+        // Создаем соединение.
+        using var connection = new MySqlConnection(Constant.ConnectionString);
+        // Создаем DataSet
+        var dataSet = new DataSet();
+        // Создаем текст запроса для выборки данных на SQL.
+        var sqlQuery = @"SELECT full_name, knowledge, reputation 
+                        FROM users
+                        WHERE is_active = true 
+                        ORDER BY knowledge DESC
+                        LIMIT 10;";
+        // Создаем DataAdapter, который будет заполнять DataSet.
+        using var dataAdapter = new MySqlDataAdapter(sqlQuery, connection);
+        // Заполняем DataSet данными на основе запроса, который мы передали в конструкторе DataAdapter-а
+        dataAdapter.Fill(dataSet);
+        // Возвращаем DataSet с заполненными данными.
+        return dataSet;
+    }
+}
