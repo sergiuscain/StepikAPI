@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API.Services.ADO.NET;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
 [ApiController]
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly UsersService _usersService;
+    private readonly IUsersService _usersService;
 
-    public UsersController(UsersService usersService)
+    public UsersController(IUsersService usersService)
     {
         _usersService = usersService;
     }

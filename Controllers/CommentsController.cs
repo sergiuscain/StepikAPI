@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API.Services.ADO.NET;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]
 public class CommentsController : ControllerBase
 {
-    private readonly CommentsService _commentsService;
+    private readonly ICommentsService _commentsService;
 
-    public CommentsController(CommentsService commentsService)
+    public CommentsController(ICommentsService commentsService)
     {
         _commentsService = commentsService;
     }

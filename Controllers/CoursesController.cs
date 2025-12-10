@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API.Services.ADO.NET;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]
 public class CoursesController : ControllerBase
 {
-    private readonly CoursesService _coursesService;
+    private readonly ICoursesService _coursesService;
 
-    public CoursesController(CoursesService coursesService)
+    public CoursesController(ICoursesService coursesService)
     {
         _coursesService = coursesService;
     }

@@ -1,15 +1,11 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace StepikPetProject.Services
+
+namespace API.Services.ADO.NET
 {
-    public class CertificatesService
-    { 
+    public class CertificatesService : ICertificatesService
+    {
         /// <summary>
         /// Получение сертификатов пользователя
         /// </summary>

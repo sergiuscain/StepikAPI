@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using StepikPetProject.Services;
+﻿using API.Services;
+using API.Services.ADO.NET;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
 [ApiController]
 [Route("[controller]")]
 public class CertificatesController : ControllerBase
 {
-    private readonly CertificatesService _certificatesService;
+    private readonly ICertificatesService _certificatesService;
 
-    public CertificatesController(CertificatesService certificatesService)
+    public CertificatesController(ICertificatesService certificatesService)
     {
         _certificatesService = certificatesService;
     }
