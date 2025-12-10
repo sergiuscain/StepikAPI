@@ -6,9 +6,9 @@ public class CommentsController : ControllerBase
 {
     private readonly CommentsService _commentsService;
 
-    public CommentsController()
+    public CommentsController(CommentsService commentsService)
     {
-        _commentsService = new CommentsService();
+        _commentsService = commentsService;
     }
 
     [HttpGet("GetCourseComments")]

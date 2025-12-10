@@ -7,9 +7,9 @@ public class UsersController : ControllerBase
 {
     private readonly UsersService _usersService;
 
-    public UsersController()
+    public UsersController(UsersService usersService)
     {
-        _usersService = new UsersService();
+        _usersService = usersService;
     }
 
     [HttpPost("AddUser")]

@@ -8,9 +8,9 @@ public class CertificatesController : ControllerBase
 {
     private readonly CertificatesService _certificatesService;
 
-    public CertificatesController()
+    public CertificatesController(CertificatesService certificatesService)
     {
-        _certificatesService = new CertificatesService();
+        _certificatesService = certificatesService;
     }
     [HttpGet("GetUserCertificates")]
     public IActionResult GetUserCertificates(string fullName)

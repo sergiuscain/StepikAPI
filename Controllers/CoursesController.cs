@@ -6,9 +6,9 @@ public class CoursesController : ControllerBase
 {
     private readonly CoursesService _coursesService;
 
-    public CoursesController()
+    public CoursesController(CoursesService coursesService)
     {
-        _coursesService = new CoursesService();
+        _coursesService = coursesService;
     }
 
     [HttpGet("GetUserCourses")]
