@@ -12,7 +12,6 @@ public class CertificatesController : ControllerBase
     {
         _certificatesService = new CertificatesService();
     }
-
     [HttpGet("GetUserCertificates")]
     public IActionResult GetUserCertificates(string fullName)
     {
