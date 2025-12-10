@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace StepikPetProject.Services
 {
     public class CertificatesService
-    {
+    { 
         /// <summary>
         /// Получение сертификатов пользователя
         /// </summary>
