@@ -141,4 +141,25 @@ public class UsersService
         // Возвращаем DataSet с заполненными данными.
         return dataSet;
     }
+    /// <summary>
+    /// Получение социальной информации пользователя
+    /// </summary>
+    /// <param name="userName">Имя пользователя</param>
+    /// <returns>DataSet</returns>
+    public DataSet GetUserSocialInfo(string userName)
+    {
+        // Открываем соединение
+        using var connection = new MySqlConnection(Constant.ConnectionString);
+        // Создаем команду и передаем в неё запрос и соединение. Соединение откроется внутри метода adapter.Fill()
+        using var command = new MySqlCommand("CALL get_user_social_info(@user_name);", connection);
+        // Добавляем параметр для защиты от SQL инъекций
+        command.Parameters.AddWithValue("@user_name", userName);
+        // Создаем адаптер и DataSet
+        using var adapter = new MySqlDataAdapter(command);
+        var dataSet = new DataSet();
+        // Заполняем DataSet. Соединение откроется без нашего участия.
+        adapter.Fill(dataSet);
+        // Возвращаем заполненный DataSet
+        return dataSet;
+    }
 }
