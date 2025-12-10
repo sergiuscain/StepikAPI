@@ -20,11 +20,11 @@ public class UsersService
             using var command = new MySqlCommand(@"
             INSERT INTO users (full_name, details, join_date, avatar, is_active) 
             VALUES (@full_name, @details, @join_date, @avatar, @is_active);", connection);
-            command.Parameters.AddWithValue("@full_name", user.FullName);
-            command.Parameters.AddWithValue("@details", user.Details);
-            command.Parameters.AddWithValue("@join_date", user.JoinDate);
-            command.Parameters.AddWithValue("@avatar", user.Avatar);
-            command.Parameters.AddWithValue("@is_active", user.IsActive);
+            command.Parameters.AddWithValue("@full_name", user.full_name);
+            command.Parameters.AddWithValue("@details", user.details);
+            command.Parameters.AddWithValue("@join_date", user.join_date);
+            command.Parameters.AddWithValue("@avatar", user.avatar);
+            command.Parameters.AddWithValue("@is_active", user.is_active);
 
             int rowsAffected = command.ExecuteNonQuery();
             Console.WriteLine($"Успешно добавлен пользователь...{rowsAffected}");
@@ -53,14 +53,14 @@ public class UsersService
         {
             var user = new User
             {
-                FullName = reader.GetString("full_name"),
-                Details = reader.IsDBNull("details") ? null : reader.GetString("details"),
-                JoinDate = reader.GetDateTime("join_date"),
-                Avatar = reader.IsDBNull("avatar") ? null : reader.GetString("avatar"),
-                IsActive = reader.GetBoolean("is_active"),
-                Knowledge = reader.GetInt32("knowledge"),
-                Reputation = reader.GetInt32("reputation"),
-                FollowersCount = reader.GetInt32("followers_count")
+                full_name = reader.GetString("full_name"),
+                details = reader.IsDBNull("details") ? null : reader.GetString("details"),
+                join_date = reader.GetDateTime("join_date"),
+                avatar = reader.IsDBNull("avatar") ? null : reader.GetString("avatar"),
+                is_active = reader.GetBoolean("is_active"),
+                knowledge = reader.GetInt32("knowledge"),
+                reputation = reader.GetInt32("reputation"),
+                followers_count = reader.GetInt32("followers_count")
             };
             return user;
         }
