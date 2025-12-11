@@ -1,5 +1,6 @@
+using API.Data;
 using API.Services;
-using API.Services.ADO.NET;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -9,7 +10,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICertificatesService, API.Services.ADO.NET.CertificatesService>();
 builder.Services.AddTransient<ICommentsService, API.Services.ADO.NET.CommentsService>();
 builder.Services.AddTransient<ICoursesService, API.Services.ADO.NET.CoursesService>();
-builder.Services.AddTransient<IUsersService, API.Services.ADO.NET.UsersService>();
+builder.Services.AddTransient<IUsersService, API.Services.EF.UsersService>();
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 var app = builder.Build();
 app.UseSwagger();

@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using API.Data;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +11,11 @@ namespace API.Services.EF
 {
     public class CertificatesService : ICertificatesService
     {
+        private readonly ApplicationDbContext dbContext;
+        public CertificatesService(ApplicationDbContext _dbContext)
+        {
+            dbContext = _dbContext;
+        }
         public DataSet Get(string fullName)
         {
             throw new NotImplementedException();
