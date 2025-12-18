@@ -29,7 +29,7 @@ public class Comment
     public int AbuseCount { get; set; }
 
 
-    public Step Step { get; set; }
+    public API.Data.Step Step { get; set; }
     public Comment ReplyComment { get; set; }
     public List<Comment> ReplyComments { get; set; }
     public User User { get; set; }
