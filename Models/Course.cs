@@ -23,5 +23,7 @@ public class Course
     [Column("price")]
     public decimal Price { get; set; }
 
+    // Навигационное свойство
     public CertificateSetting CertificateSetting { get; set; }
+    public List<Unit> Units { get; set; }
 }

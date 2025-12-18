@@ -14,28 +14,54 @@ namespace API.Services.ADO.NET
         {
             try
             {
-                //Создаем подключение
-                using MySqlConnection connection = new MySqlConnection(Constant.ConnectionString);
+                using var connection = new MySqlConnection(Constant.ConnectionString);
                 connection.Open();
-                Console.WriteLine("Connection open");
-                // Вставка данных
-                using var command = new MySqlCommand(@"
-            INSERT INTO users (full_name, details, join_date, avatar, is_active) 
-            VALUES (@full_name, @details, @join_date, @avatar, @is_active);", connection);
-                command.Parameters.AddWithValue("@full_name", user.full_name);
-                command.Parameters.AddWithValue("@details", user.details);
-                command.Parameters.AddWithValue("@join_date", user.join_date);
-                command.Parameters.AddWithValue("@avatar", user.avatar);
-                command.Parameters.AddWithValue("@is_active", user.is_active);
+                var query = @"
+        INSERT INTO users (
+            full_name,
+            details,
+            join_date,
+            avatar,
+            is_active,
+            knowledge,
+            reputation,
+            followers_count,
+            days_without_break,
+            days_without_break_max,
+            solved_tasks
+        )
+        VALUES (
+            @FullName,
+            @Details,
+            @JoinDate,
+            @Avatar,
+            @IsActive,
+            @Knowledge,
+            @Reputation,
+            @FollowersCount,
+            @DaysWithoutBreak,
+            @DaysWithoutBreakMax,
+            @SolvedTasks
+        )";
 
-                int rowsAffected = command.ExecuteNonQuery();
-                Console.WriteLine($"Успешно добавлен пользователь...{rowsAffected}");
+                using var command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@FullName", user.FullName);
+                command.Parameters.AddWithValue("@Details", user.Details ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@JoinDate", user.JoinDate);
+                command.Parameters.AddWithValue("@Avatar", user.Avatar ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@IsActive", user.IsActive);
+                command.Parameters.AddWithValue("@Knowledge", user.Knowledge);
+                command.Parameters.AddWithValue("@Reputation", user.Reputation);
+                command.Parameters.AddWithValue("@FollowersCount", user.FollowersCount);
+                command.Parameters.AddWithValue("@DaysWithoutBreak", user.DaysWithoutBreak);
+                command.Parameters.AddWithValue("@DaysWithoutBreakMax", user.DaysWithoutBreakMax);
+                command.Parameters.AddWithValue("@SolvedTasks", user.SolvedTasks);
 
-                return rowsAffected > 0;
+                var rowsAffected = command.ExecuteNonQuery();
+                return rowsAffected == 1;
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Не удалось добавить пользователя: {ex.Message}");
                 return false;
             }
         }
