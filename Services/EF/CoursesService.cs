@@ -15,10 +15,12 @@ namespace API.Services.EF
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Получение общего количества курсов
+        /// </summary>
         public int GetTotalCount()
         {
-            throw new NotImplementedException();
+            return dbContext.Courses.Count();
         }
     }
 }
