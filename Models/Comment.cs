@@ -1,5 +1,4 @@
-﻿using API.Data;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 [Table("comments")]
 public class Comment
@@ -29,7 +28,7 @@ public class Comment
     public int AbuseCount { get; set; }
 
 
-    public API.Data.Step Step { get; set; }
+    public Step Step { get; set; }
     public Comment ReplyComment { get; set; }
     public List<Comment> ReplyComments { get; set; }
     public User User { get; set; }
