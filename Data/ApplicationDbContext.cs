@@ -8,7 +8,7 @@ namespace API.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
         public DbSet<User> Users { get; set; }
         public DbSet<SocialProvider> SocialProviders { get; set; }
