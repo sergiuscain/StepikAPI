@@ -103,10 +103,38 @@ namespace API.Services.EF
             dataSet.Tables.Add(dataTable);
             return dataSet;
         }
-
+        /// <summary>
+        /// Получение социальной информации пользователя
+        /// </summary>
+        /// <param name="userName">Имя пользователя</param>
+        /// <returns>DataSet</returns>
         public DataSet GetUserSocialInfo(string userName)
         {
-            throw new NotImplementedException();
+            var socialInfos = (
+                from u in dbContext.Users
+                join usp in dbContext.UserSocialProviders on u.Id equals usp.UserId
+                join sp in dbContext.SocialProviders on usp.SocialProviderId equals sp.Id
+                where u.FullName == userName
+                orderby sp.Name
+                select new
+                {
+                    sp.Name,
+                    usp.ConnectUrl
+                }
+            ).ToList();
+
+            var dataTable = new DataTable("user_social_providers");
+            dataTable.Columns.Add("name", typeof(string));
+            dataTable.Columns.Add("connect_url", typeof(string));
+
+            foreach (var info in socialInfos)
+            {
+                dataTable.Rows.Add(info.Name, info.ConnectUrl);
+            }
+
+            var dataSet = new DataSet();
+            dataSet.Tables.Add(dataTable);
+            return dataSet;
         }
     }
 }

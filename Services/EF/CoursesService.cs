@@ -1,4 +1,5 @@
 ﻿using API.Data;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 
 namespace API.Services.EF
@@ -10,10 +11,23 @@ namespace API.Services.EF
         {
             dbContext = _dbContext;
         }
-
+        /// <summary>
+        /// Получение списка курсов пользователя
+        /// </summary>
+        /// <param name="fullName">Полное имя пользователя</param>
+        /// <returns>Список курсов</returns>
         public List<Course> Get(string fullName)
         {
-            throw new NotImplementedException();
+            var courses = dbContext.UserCourses
+                .AsNoTracking()
+                .Include(uc => uc.User)
+                .Include(uc => uc.Course)
+                .Where(uc => uc.User.FullName == fullName && uc.User.IsActive == true)
+                .OrderByDescending(uc => uc.LastViewed)
+                .Select(uc => uc.Course)
+                .ToList();
+
+            return courses;
         }
         /// <summary>
         /// Получение общего количества курсов

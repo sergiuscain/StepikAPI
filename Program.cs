@@ -7,9 +7,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<ICertificatesService, API.Services.ADO.NET.CertificatesService>();
-builder.Services.AddTransient<ICommentsService, API.Services.ADO.NET.CommentsService>();
-builder.Services.AddTransient<ICoursesService, API.Services.ADO.NET.CoursesService>();
+builder.Services.AddTransient<ICertificatesService, API.Services.EF.CertificatesService>();
+builder.Services.AddTransient<ICommentsService, API.Services.EF.CommentsService>();
+builder.Services.AddTransient<ICoursesService, API.Services.EF.CoursesService>();
 builder.Services.AddTransient<IUsersService, API.Services.EF.UsersService>();
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
